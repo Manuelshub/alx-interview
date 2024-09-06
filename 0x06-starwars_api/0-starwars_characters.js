@@ -1,19 +1,27 @@
 #!/usr/bin/node
 
-const axios = require('axios').default;
+const request = require('request'); // Use the normal request module
 const movieId = process.argv[2];
 
-async function getCharacterNames (movieId) {
-  try {
-    const resp = await axios.get(`https://swapi-api.alx-tools.com/api/films/${movieId}/`);
-    const charactersUrls = resp.data.characters;
-
-    for (const url of charactersUrls) {
-      const characterResp = await axios.get(url);
-      console.log(characterResp.data.name);
+function getCharacterNames (movieId) {
+  // Fetch the movie data
+  request.get(`https://swapi-api.alx-tools.com/api/films/${movieId}/`, { json: true }, (error, response, body) => {
+    if (error) {
+      return console.error('Error:', error.message);
     }
-  } catch (error) {
-    console.error('Error:', error.message);
-  }
+
+    const charactersUrls = body.characters;
+
+    // Fetch each character's data
+    charactersUrls.forEach(url => {
+      request.get(url, { json: true }, (error, response, body) => {
+        if (error) {
+          return console.error('Error:', error.message);
+        }
+        console.log(body.name);
+      });
+    });
+  });
 }
+
 getCharacterNames(movieId);
