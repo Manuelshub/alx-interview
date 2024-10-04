@@ -7,20 +7,22 @@ def isWinner(x, nums):
 
     Args:
         x (int): Number of rounds.
-        nums (list): List of integers representing the maximum number in each round.
+        nums (list): List of integers representing the
+        maximum number in each round.
 
     Returns:
-        str or None: The name of the player with the most wins ("Maria" or "Ben"),
+        str or None: The name of the player with the most
+        wins ("Maria" or "Ben"),
                      or None if they have the same number of wins.
     """
     if x < 1 or not nums:
         return None
-    
+
     # Precompute primes up to the maximum value in nums
     max_n = max(nums)
     prime = [True] * (max_n + 1)
     prime[0] = prime[1] = False
-    
+
     for i in range(2, int(max_n**0.5) + 1):
         if prime[i]:
             for j in range(i * i, max_n + 1, i):
